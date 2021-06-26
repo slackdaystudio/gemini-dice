@@ -33,6 +33,8 @@ const GeminiDice = (() => {
         6: 'F',
     }
 
+    const ROLL_AVERAGE = 3.5;
+
     const ROLL_CRIT_FAILURE = 1;
 
     const ROLL_CRIT_SUCCESS = 6;
@@ -60,15 +62,16 @@ const GeminiDice = (() => {
     const COLOR_DIE_NEGATED = '#CDCFCD';
 
     const s = {
+        outer: "background: white; border: 1px solid black; padding: 5px 3px; color: black; border-radius: 15px;",
         failsum: "display: table-cell; text-align: center; vertical-align: center; line-height: 80px; font-size: 3em; background: #b30000; height: 80px; width: 80px; border-radius: 40px; border: 1px solid black; color: white; font-weight: bold;",
-        diceblock: "background: white; border: 1px solid black; padding: 5px 3px; color: black; font-weight: bold;",
+        diceblock: "text-align: center; padding: 5px 3px; color: black",
         clear: "clear: both;",
         result: "margin-bottom: 5px;"
     };
 
     const f = {
-        outer: (...t) => `<div>${t.join('')}</div>`,
-        diceblock: (t) => `<div style="${s.diceblock}">${t}${f.clear()}</div>`,
+        outer: (...t) => `<div style="${s.outer}">${t.join('')}</div>`,
+        diceblock: (t) => `<div style="${s.diceblock}">${t}</div>`,
         result: (t) => `<div style="${s.result}">${t}</div>`,
         clear: () => `<div style="${s.clear}"></div>`,
         failsum: (n) => `<div style="${s.failsum}">${n}</div>`
@@ -121,6 +124,10 @@ const GeminiDice = (() => {
 
     const parts = (msg) => {
         return msg.content.split(/\s+--/);
+    }
+
+    const hasFail = (result) => {
+        return result.wildDie === ROLL_CRIT_FAILURE;
     }
 
     const initResult = (msg, type = ROLL_TYPE_STANDARD) => {
@@ -236,9 +243,10 @@ const GeminiDice = (() => {
                     f.result(getTotal(result)),
                     f.diceblock(
                         getRegularDice(result).join('') +
-                        getDie(result.wildDie, COLOR_DIE_WILD) +
+                        getWildDie(result) +
                         getBonusDice(result.bonusDice).join('') + 
-                        getPips(result.pips)
+                        getPips(result) + 
+                        getOverUnderPercentage(result)
                     ),
                 )
             )
@@ -258,33 +266,56 @@ const GeminiDice = (() => {
         });
     }
 
+    const getWildDie = (result) => {
+        const color = hasFail(result) ? 'rgba(163, 0, 21, 0.3)' : COLOR_DIE_WILD;
+
+        return getDie(result.wildDie, color);
+    }
+
     const getBonusDice = (bonusDice) => {
         return bonusDice.map((d) => {
             return getDie(d, COLOR_DIE_SUCCESS);
         });
     }
 
-    const getPips = (pips) => {
-        if (pips === 0) {
+    const getPips = (result) => {     
+        if (result.pips === 0) {
             return '';
         }
 
+        const isFailed = hasFail(result);
+
         let sign = '+';
 
-        if (pips < 0) {
+        if (result.pips < 0) {
             sign = '';
         }
         
-        return `<div style="float:left; background-color: yellow; color: black; border: 1px solid #999999; border-radius: 10px; font-weight: bold; padding: 1px 5px; margin: 1px 8px;"> ${sign}${pips}</div>`;
+        return `<div style="display: block ; text-align: center; font-size: 0.85em ; color: #595959; padding-top: 5px">Note: Total${isFailed ? 's' : ''} ${isFailed ? 'have' : 'has'} had ${sign}${result.pips} pip${result.pips > 1 ? 's' : ''} ${hasFail ? 'added' : 'subtracted'}</div>`;
     }
 
+    const getOverUnderPercentage = (result) => {
+        const rolledDice = [...result.dice, ...[result.wildDie]];
+        const average = rolledDice.length * ROLL_AVERAGE;
+        const sum = [...rolledDice, ...result.bonusDice].reduce((a, b) => a + b, 0);
+        const overUnder = Math.round((sum / average - 1) * 100 * 10) / 10;
+        let message = 'Your roll was average';
+
+        if (overUnder < 0.0) {
+            message = `Your roll was <span style="color: ${COLOR_DIE_WILD}">${overUnder}%</span> below average`;
+        } else if (overUnder > 0.0) {
+            message = `Your roll was <span style="color: ${COLOR_DIE_SUCCESS}">+${overUnder}%</span> above average`;
+        }
+
+        return `<div style="display: block; text-align: center; font-size: 0.85em; color: #595959; padding-top: 5px">${message}</div>`;
+    }
 
     const getDie = (die, color = COLOR_DIE_NORMAL) => {
-        return `<div style="float: left; font-family: dicefontd6; font-size: 2em; color: ${color}; padding: 1px 1px; margin: 1px 1px;">${dice[die]}</div>`;
+        return `<div style="display: inline; font-family: dicefontd6; font-size: 2em; font-weight: bold; color: ${color}; padding: 1px 1px; margin: 1px 1px;">${dice[die]}</div>`;
     }
 
     const getTotal = (result) => {
-        const hasFail = result.wildDie === ROLL_CRIT_FAILURE;
+        const isFailed = hasFail(result);
         let sum = 0;
 
         if (result.type === ROLL_TYPE_STANDARD) {
@@ -299,8 +330,8 @@ const GeminiDice = (() => {
 
         sum = sum < 0 ? 0 : sum;
 
-        return '<div style="display: table; margin: 0 auto">' + (hasFail ? f.failsum(result.sumFail < 0 ? 0 : result.sumFail) : '') +
-            '<div style="display: table-cell; margin: auto; width: 50%; text-align: center; vertical-align: center; line-height: 80px; font-size: 3em; background: ' + (hasFail ? '#f09f1f' : '#25c21d') + '; height: 80px; width: 80px; border-radius: 40px; border: 1px solid black; color: white; font-weight: bold;">' + sum + '</div></div>'+
+        return '<div style="display: table; margin: 0 auto">' + (isFailed ? f.failsum(result.sumFail < 0 ? 0 : result.sumFail) : '') +
+            '<div style="display: table-cell; margin: auto; width: 50%; text-align: center; vertical-align: center; line-height: 80px; font-size: 3em; background: ' + (isFailed ? '#f09f1f' : '#25c21d') + '; height: 80px; width: 80px; border-radius: 40px; border: 1px solid black; color: white; font-weight: bold;">' + sum + '</div></div>'+
             '<div style="clear: both"></div>';
     }
 
