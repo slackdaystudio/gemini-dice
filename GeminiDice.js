@@ -13,7 +13,7 @@
  * be found here: https://github.com/shdwjk/Roll20API/blob/master/WildDice/WildDice.js
  * 
  * Version: 1.0.0
- * Authors: The Aaron, sentry0
+ * Authors: sentry0
  * Contact: https://app.roll20.net/users/6148080/sentry0
  */
 const GeminiDice = (() => {
@@ -88,19 +88,19 @@ const GeminiDice = (() => {
                 '</div>' +
                 '<b>Commands</b>' +
                 '<div style="padding-left:10px;">' +
-                    '<b><span style="font-family: serif;">!gd [&lt;Dice Expression&gt; | --help]</span></b>' +
+                    '<b><span style="font-family: serif;">!gd &lt;Dice Expression&gt;</span></b>' +
                     '<div style="padding-left: 10px;padding-right:20px">' +
                         '<p>Rolls the GeminiDice expression and diplays the results.</p>' +
                     '</div>' +
-                    '<b><span style="font-family: serif;">!gds [&lt;Dice Expression&gt; | --help]</span></b>' +
+                    '<b><span style="font-family: serif;">!gds &lt;Dice Expression&gt;</span></b>' +
                     '<div style="padding-left: 10px;padding-right:20px">' +
                         '<p>Rolls the GeminiDice expression counting any successes and diplays the results.</p>' +
                     '</div>' +
-                    '<b><span style="font-family: serif;">!gdl [&lt;Dice Expression&gt; | --help]</span></b>' +
+                    '<b><span style="font-family: serif;">!gdl &lt;Dice Expression&gt;</span></b>' +
                     '<div style="padding-left: 10px;padding-right:20px">' +
                         '<p>Rolls the GeminiDice expression counting any Luck and diplays the results.</p>' +
                     '</div>' +
-                    '<b><span style="font-family: serif;">!gdu [&lt;Dice Expression&gt; | --help]</span></b>' +
+                    '<b><span style="font-family: serif;">!gdu &lt;Dice Expression&gt;</span></b>' +
                     '<div style="padding-left: 10px;padding-right:20px">' +
                         '<p>Rolls the GeminiDice expression counting any Unluck and diplays the results.</p>' +
                     '</div>' +
