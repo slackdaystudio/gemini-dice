@@ -84,7 +84,7 @@ const GeminiDice = (() => {
                     '<p>GeminiDice implements the rolling mechanics for all of the Gemini System roll styles.</p>' +
                     '<p>You may prepend a w to any command to whisper the result to the GM.  For example, <span style="font-family: serif;">!wgd &lt;Dice Expression&gt;</span> would send the result directly to the GM. ' + 
                     'A <b><span style="font-family: serif;">&lt;Dice Expression&gt; </span></b> is an inline dice expression, something akin to &lsqb;&lsqb;5d6+8&rsqb;&rsqb; which will then be parsed for the roll result.<p>' + 
-                    '<p>Any command with the <span style="font-family: serif;">--help</span> argument will sow this menu<p>' + 
+                    '<p>Any command with the <span style="font-family: serif;">--help</span> argument will show this menu<p>' + 
                 '</div>' +
                 '<b>Commands</b>' +
                 '<div style="padding-left:10px;">' +
