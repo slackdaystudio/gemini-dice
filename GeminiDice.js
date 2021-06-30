@@ -141,7 +141,7 @@ const GeminiDice = (() => {
     
                 pips = parseInt(pipParts[0], 10) + parseInt(pipParts[1], 10);
             } else if (/^(\+|\-)[0-9]*/.test(msg.inlinerolls[0].results.rolls[1].expr)) {
-                pips = parseInt(msg.inlinerolls[0].results.rolls[1].expr, 10);
+                pips = parseInt(msg.inlinerolls[0].results.rolls[1].expr.slice(1), 10);
             }
         }
         
@@ -283,15 +283,13 @@ const GeminiDice = (() => {
             return '';
         }
 
-        const isFailed = hasFail(result);
-
         let sign = '+';
 
         if (result.pips < 0) {
             sign = '';
         }
         
-        return `<div style="display: block ; text-align: center; font-size: 0.85em ; color: #595959; padding-top: 5px">Note: Total${isFailed ? 's' : ''} ${isFailed ? 'have' : 'has'} had ${sign}${result.pips} pip${result.pips > 1 ? 's' : ''} ${hasFail ? 'added' : 'subtracted'}</div>`;
+        return `<div style="display: block ; text-align: center; font-size: 0.85em ; color: #595959; padding-top: 5px">Total has had ${sign}${result.pips} pip${result.pips > 1 ? 's' : ''} ${hasFail(result) ? 'added' : 'subtracted'}</div>`;
     }
 
     const getOverUnderPercentage = (result) => {
