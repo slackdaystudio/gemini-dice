@@ -216,12 +216,12 @@ const GeminiDice = (() => {
 
             result.markFirstMax = true;
         } else if (result.wildDie === ROLL_CRIT_SUCCESS) {
-            let errorDie = ROLL_CRIT_SUCCESS;
+            let bonusDie = ROLL_CRIT_SUCCESS;
 
-            while (ROLL_CRIT_SUCCESS === errorDie) {
-                errorDie = randomInteger(6);
+            while (ROLL_CRIT_SUCCESS === bonusDie) {
+                bonusDie = randomInteger(6);
 
-                result.bonusDice.push(errorDie);
+                result.bonusDice.push(bonusDie);
             }
         }
 
@@ -289,7 +289,7 @@ const GeminiDice = (() => {
             sign = '';
         }
         
-        return `<div style="display: block ; text-align: center; font-size: 0.85em ; color: #595959; padding-top: 5px">Total has had ${sign}${result.pips} pip${result.pips > 1 ? 's' : ''} ${hasFail(result) ? 'added' : 'subtracted'}</div>`;
+        return `<div style="display: block ; text-align: center; font-size: 0.85em ; color: #595959; padding-top: 5px">Total has had ${sign}${result.pips} pip${result.pips > 1 ? 's' : ''} ${sign === '+' ? 'added' : 'subtracted'}</div>`;
     }
 
     const getOverUnderPercentage = (result) => {
