@@ -337,7 +337,7 @@ const GeminiDice = (() => {
   };
 
   const getDie = (die, color = COLOR_DIE_NORMAL) => {
-    return `<div style="display: inline; font-family: dicefontd6; font-size: 2em; font-weight: bold; color: ${color}; padding: 1px 1px; margin: 1px 1px;">${dice[die]}</div>`;
+    return `<div style="display: inline; font-family: dicefontd6; font-size: 2.8em; font-weight: bold; color: ${color}; padding: 1px 1px; margin: 1px 1px;">${dice[die]}</div>`;
   };
 
   const getTotal = (result) => {
