@@ -12,12 +12,12 @@
  * This script is a heavily modified WildDie script originally created by The Aaron which may
  * be found here: https://github.com/shdwjk/Roll20API/blob/master/WildDice/WildDice.js
  *
- * Version: 1.0.0
+ * Version: 1.0.1
  * Authors: sentry0
  * Contact: https://app.roll20.net/users/6148080/sentry0
  */
 const GeminiDice = (() => {
-  const version = "1.0.0";
+  const version = "1.0.1";
 
   const checkInstall = () => {
     log("GeminiDice v" + version);
@@ -50,11 +50,11 @@ const GeminiDice = (() => {
 
   const LUCK_THRESHOLD = 6;
 
-  const UNLUCK_THRESHOLD = 1;
+  const UNLUCK_THRESHOLD = 6;
 
   const COLOR_DIE_NORMAL = "#2A2D2A";
 
-  const COLOR_DIE_WILD = "#C8293D";
+  const COLOR_DIE_WILD = "#516f94";
 
   const COLOR_DIE_SUCCESS = "#19B619";
 
@@ -422,7 +422,7 @@ const GeminiDice = (() => {
       case "!gdl":
         luckRoll(msg, w, ROLL_TYPE_LUCK);
         break;
-      // Unluck roll, every 1 rolled is one point of unluck
+      // Unluck roll, every 6 rolled is one point of unluck
       case "!gdu":
         luckRoll(msg, w, ROLL_TYPE_UNLUCK);
         break;
